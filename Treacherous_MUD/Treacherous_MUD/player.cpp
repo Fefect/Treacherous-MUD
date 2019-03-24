@@ -21,8 +21,9 @@ class Player
 		selection.setOutlineThickness(2);
 		selection.setOutlineColor(sf::Color::Magenta);
 		selection.setFillColor(sf::Color::Transparent);
-		selection.setPosition(pos.x * 32, pos.y * 32);
-    } 
+		selection.setPosition(25.f,25.f);
+    }
+
       
     //Parametrized Constructor 
     Player(int x, int y) 

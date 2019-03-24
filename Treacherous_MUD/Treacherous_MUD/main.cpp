@@ -86,27 +86,6 @@ void printPath(std::vector<std::pair<int, int>> path)
 			}
 	}
 
-	std::cout << "START" << " ";
-	while(!instructions.empty())
-	{
-		switch(instructions.front())
-		{
-			case 0: 
-			std::cout << "North" << " ";
-			break;
-			case 1:
-				std::cout << "East" << " ";
-			break;
-			case 2:
-				std::cout << "South" << " ";
-			break;
-			case 3:
-				std::cout << "West" << " ";
-			break;
-		}
-		instructions.pop();
-	}
-	std::cout << "END" << " ";
 }
  
 // Find shortest route in the matrix from source cell (x, y) to
@@ -216,7 +195,7 @@ int main()
 	const unsigned WINDOW_WIDTH = 1024;
 	const unsigned WINDOW_HEIGHT = 768;
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Treacherous MUD");
-	window.setFramerateLimit(120);
+	window.setFramerateLimit(10);
 
 
 	float dt;
@@ -232,6 +211,12 @@ int main()
 	selection.setOutlineThickness(2);
 	selection.setOutlineColor(Color::Yellow);
 	selection.setFillColor(Color::Transparent);
+
+	RectangleShape playerBox;
+	playerBox.setSize(Vector2f(gridSize,gridSize));
+	playerBox.setOutlineThickness(2);
+	playerBox.setOutlineColor(Color::Yellow);
+	playerBox.setFillColor(Color::Red);
 
 	RectangleShape gridGround;
 	std::vector<RectangleShape> gridGroundList;
@@ -294,8 +279,8 @@ int main()
 	while (window.isOpen())
 	{
 		dt = dt_clock.restart().asSeconds();
+		dt_clock.getElapsedTime().asSeconds();
 
-		
 		mousePosGrid.x = Mouse::getPosition(window).x / int(gridSize);
 		mousePosGrid.y = Mouse::getPosition(window).y / int(gridSize);
 
@@ -334,7 +319,7 @@ int main()
 
 		if(Mouse::isButtonPressed(Mouse::Left))
 		{
-			findPath(matrix2,(int)player.selection.getPosition().x / gridSize,(int) player.selection.getPosition().y / gridSize, mousePosGrid.x,mousePosGrid.y);
+			findPath(matrix2,(int)playerBox.getPosition().x / gridSize,(int) playerBox.getPosition().y / gridSize, mousePosGrid.x,mousePosGrid.y);
 			path.clear();
 
 		for(auto &i : pathBackup)
@@ -390,7 +375,35 @@ int main()
 		}
 		window.draw(selection);
 
-		window.draw(player.selection);
+		int x = playerBox.getPosition().x;
+		int y= playerBox.getPosition().y;
+
+		if(!instructions.empty()) {
+		switch(instructions.front())
+		{
+		case 0:
+			playerBox.setPosition(x, y - gridSize);
+			instructions.pop();
+			break;
+		case 1:
+			playerBox.setPosition(x + gridSize, y);
+			instructions.pop();
+			break;
+
+		case 2:
+			playerBox.setPosition(x, y + gridSize);
+			instructions.pop();
+			break;
+
+		case 3:
+			playerBox.setPosition(x - gridSize, y);
+			instructions.pop();
+			break;
+
+		}
+		}
+
+		window.draw(playerBox);
   //
 		// for (auto& texty : texts)
   //       {
