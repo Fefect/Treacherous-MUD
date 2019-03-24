@@ -13,6 +13,7 @@ using namespace sf;
 std::vector<std::pair<int, int>> pathBackup;
 std::queue<int> instructions; // 0 = top, 1 = left, 2 = bottom, 3 = right
 int matrix2[N][N];
+bool focus;
 
 struct Node
 {
@@ -65,22 +66,23 @@ void printPath(std::vector<std::pair<int, int>> path)
 		int y1 = pathBackup[i].second;
 		int x2 = pathBackup[i+1].first;
 		int y2 = pathBackup[i+1].second;
-		if(x1 - x2 >= 0)
+		int newCoors = x1 - x2;
+		int newCoors2 = y1 - y2;
+		if(newCoors > 0 && newCoors2 == 0)
 			{
-				instructions.push(2);
+				instructions.push(3);
 			}
-		else if(x1 - x2 < 0)
-			{
-				instructions.push(1);
-			}
-		else if(y1 - y2 >= 0)
+		else if(newCoors2 > 0 && newCoors == 0)
 			{
 				instructions.push(0);
 			}
+		else if(newCoors < 0 && newCoors2 == 0)
+			{
+				instructions.push(1);
+			}
 		else
 			{
-				instructions.push(3);
-				break;
+				instructions.push(2);
 			}
 	}
 
@@ -305,9 +307,8 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-
 		//Add walls
-		if (Mouse::isButtonPressed(Mouse::Left))
+		if (Mouse::isButtonPressed(Mouse::Middle))
 		{
 			bool exists = false;
 			for (size_t i = 0; i < walls.size() && !exists; i++)
@@ -326,12 +327,12 @@ int main()
 				matrix2[mousePosGrid.x][mousePosGrid.y] = 10;
 				wall.setPosition(mousePosGrid.x * gridSize, mousePosGrid.y * gridSize);
 				walls.push_back(wall);
-				updatePath(path,pathShape,gridSize);
+				//updatePath(path,pathShape,gridSize);
 				}
 			}
 		}
 
-		if(Mouse::isButtonPressed(Mouse::Middle))
+		if(Mouse::isButtonPressed(Mouse::Left))
 		{
 			findPath(matrix2,(int)player.selection.getPosition().x / gridSize,(int) player.selection.getPosition().y / gridSize, mousePosGrid.x,mousePosGrid.y);
 			path.clear();
@@ -364,7 +365,7 @@ int main()
 				{
 				matrix2[mousePosGrid.x][mousePosGrid.y] = 1;
 				walls.erase(walls.begin() + index);
-				updatePath(path,pathShape,gridSize);
+				//updatePath(path,pathShape,gridSize);
 				}
 			}
 		}
