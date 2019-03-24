@@ -5,13 +5,13 @@
 #include"SFML\System.hpp"
 #include <unordered_map>
 #include <queue>
-
+#include "player.cpp"
 #define N 20
 
 using namespace sf;
 
 std::vector<std::pair<int, int>> pathBackup;
-
+std::queue<int> instructions; // 0 = top, 1 = left, 2 = bottom, 3 = right
 int matrix2[N][N];
 
 struct Node
@@ -50,10 +50,61 @@ bool isValid(int x, int y)
 void printPath(std::vector<std::pair<int, int>> path)
 {
 	pathBackup = path;
-	std::cout << "Destination Found:\t";
-    for (std::pair<int, int> p: pathBackup)
-	    std::cout << "(" << p.first << ", " << p.second << ") ";
-	std::cout << '\n';
+	//std::cout << "Destination Found:\t";
+   // for (std::pair<int, int> p: pathBackup)
+	//    std::cout << "(" << p.first << ", " << p.second << ") ";
+	//std::cout << '\n';
+	while(!instructions.empty())
+	{
+		instructions.pop();
+	}
+
+	for(int i = 0; i < pathBackup.size() -1; i++)
+	{
+		int x1 = pathBackup[i].first;
+		int y1 = pathBackup[i].second;
+		int x2 = pathBackup[i+1].first;
+		int y2 = pathBackup[i+1].second;
+		if(x1 - x2 >= 0)
+			{
+				instructions.push(2);
+			}
+		else if(x1 - x2 < 0)
+			{
+				instructions.push(1);
+			}
+		else if(y1 - y2 >= 0)
+			{
+				instructions.push(0);
+			}
+		else
+			{
+				instructions.push(3);
+				break;
+			}
+	}
+
+	std::cout << "START" << " ";
+	while(!instructions.empty())
+	{
+		switch(instructions.front())
+		{
+			case 0: 
+			std::cout << "North" << " ";
+			break;
+			case 1:
+				std::cout << "East" << " ";
+			break;
+			case 2:
+				std::cout << "South" << " ";
+			break;
+			case 3:
+				std::cout << "West" << " ";
+			break;
+		}
+		instructions.pop();
+	}
+	std::cout << "END" << " ";
 }
  
 // Find shortest route in the matrix from source cell (x, y) to
@@ -148,6 +199,10 @@ void updatePath(std::vector<RectangleShape> &path, RectangleShape &pathShape, fl
 
 int main()
 {
+	int yy = 0;
+	int zz = 0;
+	Player player;
+
 	for(int x = 0; x < N ; x++)
 	{
 		for(int y = 0; y < N ; y++)
@@ -158,7 +213,7 @@ int main()
 
 	const unsigned WINDOW_WIDTH = 1024;
 	const unsigned WINDOW_HEIGHT = 768;
-	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Stop it Simon");
+	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Treacherous MUD");
 	window.setFramerateLimit(120);
 
 
@@ -233,6 +288,7 @@ int main()
 	//Collision
 	FloatRect nextPos;
 
+
 	while (window.isOpen())
 	{
 		dt = dt_clock.restart().asSeconds();
@@ -273,6 +329,18 @@ int main()
 				updatePath(path,pathShape,gridSize);
 				}
 			}
+		}
+
+		if(Mouse::isButtonPressed(Mouse::Middle))
+		{
+			findPath(matrix2,(int)player.selection.getPosition().x / gridSize,(int) player.selection.getPosition().y / gridSize, mousePosGrid.x,mousePosGrid.y);
+			path.clear();
+
+		for(auto &i : pathBackup)
+	{
+			pathShape.setPosition(i.first * gridSize, i.second * gridSize);
+			path.push_back(pathShape);
+	}
 		}
 
 		//Remove wall
@@ -320,6 +388,8 @@ int main()
 			window.draw(u);
 		}
 		window.draw(selection);
+
+		window.draw(player.selection);
   //
 		// for (auto& texty : texts)
   //       {
