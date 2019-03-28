@@ -8,16 +8,23 @@ int col[] = { 0, -1, 1, 0 };
 
 bool focus;
 
-int BFS::findPath(int matrix[64][64], int x, int y, int endX, int endY)
+BFS::BFS()
+{
+}
+
+BFS::~BFS()
+{
+}
+
+int BFS::findPath(int matrix[64][64], int x, int y, const int endX, const int endY)
 {
 	std::vector<std::pair<int, int>> path;
     path.emplace_back(x, y);
 
-
  	this->pathBackup.clear();
      // create a queue and enqueue first node
  	std::queue<Node> Q;
-     Node src = {x, y, path};
+	const Node src = {x, y, path};
      Q.push(src);
   
      // map to check if matrix cell is visited before or not
@@ -28,10 +35,11 @@ int BFS::findPath(int matrix[64][64], int x, int y, int endX, int endY)
      while (!Q.empty())
      {
          // pop front node from queue and process it
-         Node curr = Q.front();
+	     const auto curr = Q.front();
          Q.pop();
-  
-         int i = curr.x, j = curr.y;
+
+	     const auto i = curr.x;
+	     const auto j = curr.y;
          path = curr.path;
   
          // if destination is found, return true
@@ -42,15 +50,15 @@ int BFS::findPath(int matrix[64][64], int x, int y, int endX, int endY)
          }
   
          // value of current cell
-         int n = matrix[i][j];
+	     const auto n = matrix[i][j];
   
          // check all 4 possible movements from current cell
          // and recurse for each valid movement
-         for (int k = 0; k < 4; k++)
+         for (auto k = 0; k < 4; k++)
          {
              // get next position coordinates using value of current cell
-             int x = i + row[k] * n;
-             int y = j + col[k] * n;
+	         auto x = i + row[k] * n;
+	         auto y = j + col[k] * n;
   
              // check if it is possible to go to next position
              // from current position
@@ -60,7 +68,7 @@ int BFS::findPath(int matrix[64][64], int x, int y, int endX, int endY)
                  path.emplace_back(x, y);
   
                  // construct next cell node
-                 Node next = {x, y, path};
+	             const Node next = {x, y, path};
              
                  if (!visited.count(next))
                  {
@@ -74,7 +82,7 @@ int BFS::findPath(int matrix[64][64], int x, int y, int endX, int endY)
          }
      }
   
-     // return INFINITY if path is not possible
+     // return INT_MAX if result is not found
      return INT_MAX;
 }
 

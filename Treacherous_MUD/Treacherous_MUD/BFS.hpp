@@ -6,6 +6,9 @@
 class BFS
 {
 public:
+
+	BFS();
+	~BFS();
 	int findPath(int matrix[64][64], int x, int y, int endX, int endY);
 
 	std::vector<std::pair<int, int>> pathBackup;
@@ -14,11 +17,11 @@ public:
 
 private:
 
-	bool isValid(int x, int y, int N);
+	static bool isValid(int x, int y, int N);
 
 	void printPath(std::vector<std::pair<int, int>> path);
 
-	void updatePath(std::vector<sf::RectangleShape> &path, sf::RectangleShape &pathShape, float gridSize );
+	static void updatePath(std::vector<sf::RectangleShape> &path, sf::RectangleShape &pathShape, float gridSize );
 
 	struct Node
 	{

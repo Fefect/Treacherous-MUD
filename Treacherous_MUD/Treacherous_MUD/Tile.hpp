@@ -19,6 +19,9 @@ class Tile
     sf::Sprite sprite;
  
     TileType tileType;
+
+	int corX;
+	int corY;
  
     /* Tile variant, allowing for different looking versions of the
      * same tile */
@@ -28,37 +31,18 @@ class Tile
      * First is for transport */
     unsigned int regions[1];
  
-    /* Placement cost of the tile */
-    unsigned int cost;
- 
-    /* Current residents / employees */
-    double population;
-    /* Maximum population per growth stage / tile variant */
-    unsigned int maxPopPerLevel;
-    /* Maximum number of building levels */
-    unsigned int maxLevels;
-    /* Production output per customer/worker per day, either monetary or goods */
-    float production;
-    /* Goods stored */
-    float storedGoods;
- 
     /* Constructor */
     Tile() { }
     Tile(const unsigned int tileSize, const unsigned int height, sf::Texture& texture,
         const std::vector<Animation>& animations,
-        const TileType tileType, const unsigned int cost, const unsigned int maxPopPerLevel,
-        const unsigned int maxLevels)
+        const TileType tileType)
     {
         this->tileType = tileType;
         this->tileVariant = 0;
         this->regions[0] = 0;
- 
-        this->cost = cost;
-        this->population = 0;
-        this->maxPopPerLevel = maxPopPerLevel;
-        this->maxLevels = maxLevels;
-        this->production = 0;
-        this->storedGoods = 0;
+
+		this->corX = 0;
+		this->corY = 0;
  
         this->sprite.setOrigin(sf::Vector2f(0.0f, tileSize*(height-1)));
         this->sprite.setTexture(texture);
@@ -74,11 +58,6 @@ class Tile
  
     void update();
  
-    /* Return a string containing the display cost of the tile */
-    std::string getCost()
-    {
-        return std::to_string(this->cost);
-    }
 };
  
 #endif /* TILE_HPP */

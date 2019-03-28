@@ -13,11 +13,6 @@
 
 class Map
 {
-    private:
- 
-    void depthfirstsearch(std::vector<TileType>& whitelist,
-        sf::Vector2i pos, int label, int type);
- 
     public:
 
 	BFS bfs;
@@ -38,14 +33,11 @@ class Map
  
     unsigned int numRegions[1];
 
-	std::vector<char> selected;
  
 	/* Select the tiles within the bounds */
 	void select(sf::Vector2i location, std::vector<TileType> blacklist);
  
 	/* Deselect all tiles */
-	void clearSelected();
-
 
 	//clears the path
 	void clearPath();

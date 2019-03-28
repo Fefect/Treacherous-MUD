@@ -72,20 +72,14 @@ void GameStateEditor::handleInput()
     }
     else if(event.mouseButton.button == sf::Mouse::Left)
     {
-        /* Select map tile */
-       // if(this->actionState != ActionState::SELECTING)
-        {
-            this->actionState = ActionState::SELECTING;
-            sf::Vector2f pos = this->game->window.mapPixelToCoords(sf::Mouse::getPosition(this->game->window), this->gameView);
-            selectionStart.x = pos.y / (this->map.tileSize) + pos.x / (2*this->map.tileSize) - this->map.width * 0.5 - 0.5;
-            selectionStart.y = pos.y / (this->map.tileSize) - pos.x / (2*this->map.tileSize) + this->map.width * 0.5 + 0.5;
-			this->map.clearSelected();
-		    if(this->currentTile->tileType == TileType::GRASS)
-		    {
-		       this->map.select(selectionStart, {this->currentTile->tileType, TileType::WATER});
-		    }
-        }
-
+        this->actionState = ActionState::SELECTING;
+        sf::Vector2f pos = this->game->window.mapPixelToCoords(sf::Mouse::getPosition(this->game->window), this->gameView);
+        selectionStart.x = pos.y / (this->map.tileSize) + pos.x / (2*this->map.tileSize) - this->map.width * 0.5 - 0.5;
+        selectionStart.y = pos.y / (this->map.tileSize) - pos.x / (2*this->map.tileSize) + this->map.width * 0.5 + 0.5;
+	    if(this->currentTile->tileType == TileType::GRASS)
+	    {
+	       this->map.select(selectionStart, {this->currentTile->tileType, TileType::WATER});
+	    }
     }
     else if(event.mouseButton.button == sf::Mouse::Right)
     {
@@ -93,7 +87,6 @@ void GameStateEditor::handleInput()
         if(this->actionState == ActionState::SELECTING)
         {
             this->actionState = ActionState::NONE;
-            this->map.clearSelected();
         }
     }
     break;
@@ -140,7 +133,7 @@ GameStateEditor::GameStateEditor(Game* game)
  
     map = Map("city_map.dat", 64, 64, game->tileAtlas);
  
-    this->zoomLevel = 1.0f;
+    this->zoomLevel = 1.5f;
  
     /* Centre the camera on the map */
     sf::Vector2f centre(this->map.width, this->map.height*0.5);

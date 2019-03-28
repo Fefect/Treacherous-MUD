@@ -39,12 +39,12 @@ void AnimationHandler::update(const float dt)
 }
 
 
-    void AnimationHandler::addAnim(Animation& anim)
-    {
-        this->animations.push_back(anim);
-     
-        return;
-    }
+void AnimationHandler::addAnim(Animation& anim)
+{
+    this->animations.push_back(anim);
+ 
+    return;
+}
      
 void AnimationHandler::changeAnim(unsigned int animID)
 {
