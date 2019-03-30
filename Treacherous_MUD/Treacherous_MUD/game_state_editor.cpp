@@ -3,7 +3,8 @@
  
 #include "game_state.hpp"
 #include "game_state_editor.hpp"
- 
+#include <iostream>
+
 void GameStateEditor::draw(const float dt)
 {
     this->game->window.clear(sf::Color::Black);
@@ -13,6 +14,9 @@ void GameStateEditor::draw(const float dt)
  
     this->game->window.setView(this->gameView);
     map.draw(this->game->window, dt);
+
+	this->game->window.setView(this->guiView);
+    for(auto gui : this->guiSystem) this->game->window.draw(gui.second);
  
     return;
 }
@@ -25,6 +29,9 @@ void GameStateEditor::update(const float dt)
 void GameStateEditor::handleInput()
 {
     sf::Event event;
+ 
+    sf::Vector2f guiPos = this->game->window.mapPixelToCoords(sf::Mouse::getPosition(this->game->window), this->guiView);
+    sf::Vector2f gamePos = this->game->window.mapPixelToCoords(sf::Mouse::getPosition(this->game->window), this->gameView);
  
     while(this->game->window.pollEvent(event))
     {
@@ -64,6 +71,8 @@ void GameStateEditor::handleInput()
     /* Start panning */
     if(event.mouseButton.button == sf::Mouse::Middle)
     {
+		this->guiSystem.at("rightClickMenu").hide();
+        this->guiSystem.at("selectionCostText").hide();
         if(this->actionState != ActionState::PANNING)
         {
             this->actionState = ActionState::PANNING;
@@ -76,7 +85,17 @@ void GameStateEditor::handleInput()
         sf::Vector2f pos = this->game->window.mapPixelToCoords(sf::Mouse::getPosition(this->game->window), this->gameView);
         selectionStart.x = pos.y / (this->map.tileSize) + pos.x / (2*this->map.tileSize) - this->map.width * 0.5 - 0.5;
         selectionStart.y = pos.y / (this->map.tileSize) - pos.x / (2*this->map.tileSize) + this->map.width * 0.5 + 0.5;
-	    if(this->currentTile->tileType == TileType::GRASS)
+		if(this->guiSystem.at("rightClickMenu").visible)
+		{
+			std::string msg = this->guiSystem.at("rightClickMenu").activate(guiPos);
+			if(msg == "cmd_examine")
+			{
+				std::cout << "Clicked the examine button \n";
+
+				this->guiSystem.at("rightClickMenu").hide();
+			}
+		}
+		else if(this->currentTile->tileType == TileType::GRASS)
 	    {
 	       this->map.select(selectionStart, {this->currentTile->tileType, TileType::WATER});
 	    }
@@ -88,6 +107,26 @@ void GameStateEditor::handleInput()
         {
             this->actionState = ActionState::NONE;
         }
+		if(!this->guiSystem.at("rightClickMenu").visible)
+		{
+			 /* Open the tile select menu. */
+        sf::Vector2f pos = guiPos;
+ 
+        if(pos.x > this->game->window.getSize().x - this->guiSystem.at("rightClickMenu").getSize().x)
+        {
+            pos -= sf::Vector2f(this->guiSystem.at("rightClickMenu").getSize().x, 0);
+        }
+        if(pos.y > this->game->window.getSize().y - this->guiSystem.at("rightClickMenu").getSize().y)
+        {
+            pos -= sf::Vector2f(0, this->guiSystem.at("rightClickMenu").getSize().y);
+        }
+        this->guiSystem.at("rightClickMenu").setPosition(pos);
+        this->guiSystem.at("rightClickMenu").show();
+		}
+		else
+		{
+			this->guiSystem.at("rightClickMenu").hide();
+		}
     }
     break;
 }
@@ -145,4 +184,21 @@ GameStateEditor::GameStateEditor(Game* game)
  
     this->currentTile = &this->game->tileAtlas.at("grass");
     this->actionState = ActionState::NONE;
+
+		/* Create gui elements. */
+	this->guiSystem.emplace("rightClickMenu", Gui(sf::Vector2f(196, 16), 2, false, this->game->stylesheets.at("button"),
+	    {
+			std::make_pair("Examine", "cmd_examine"),
+	    }));
+	 
+	this->guiSystem.emplace("selectionCostText", Gui(sf::Vector2f(196, 16), 0, false, this->game->stylesheets.at("text"),
+	    { std::make_pair("", "") }));
+	 
+	this->guiSystem.emplace("infoBar", Gui(sf::Vector2f(this->game->window.getSize().x / 5, 16), 2, true,
+	                                       this->game->stylesheets.at("button"),
+	    {
+	        std::make_pair("time",          "time")
+	    }));
+	this->guiSystem.at("infoBar").setPosition(sf::Vector2f(0, this->game->window.getSize().y - 16));
+	this->guiSystem.at("infoBar").show();
 }

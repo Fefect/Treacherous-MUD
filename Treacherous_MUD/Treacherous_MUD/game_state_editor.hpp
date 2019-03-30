@@ -6,6 +6,7 @@
  
 #include "game_state.hpp"
 #include "map.hpp"
+#include "gui.hpp"
 
 enum class ActionState { NONE, PANNING, SELECTING };
  
@@ -19,6 +20,8 @@ class GameStateEditor : public GameState
     sf::View guiView;
 
 	Map map;
+
+	std::map<std::string, Gui> guiSystem;
 
 	sf::Vector2i panningAnchor;
     float zoomLevel;

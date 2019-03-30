@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include "texture_manager.hpp"
 #include "Tile.hpp"
+#include "gui.hpp"
 
 class GameState;
  
@@ -16,6 +17,8 @@ class Game
  
 	std::stack<GameState*> states;
 	std::map<std::string, Tile> tileAtlas;
+	std::map<std::string, GuiStyle> stylesheets;
+	std::map<std::string, sf::Font> fonts;
  
     sf::RenderWindow window;
     TextureManager texmgr;
@@ -33,6 +36,8 @@ class Game
 	private:
 	void loadTextures();
 	void loadTiles();
+	void loadStylesheets();
+	void loadFonts();
 };
  
 #endif /* GAME_HPP */
