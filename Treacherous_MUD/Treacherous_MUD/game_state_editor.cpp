@@ -170,7 +170,7 @@ GameStateEditor::GameStateEditor(Game* game)
     this->guiView.setCenter(pos);
     this->gameView.setCenter(pos);
  
-    map = Map("city_map.dat", 64, 64, game->tileAtlas);
+    map = Map("city_map1.dat", 64, 64, game->tileAtlas);
  
     this->zoomLevel = 1.5f;
  
@@ -193,11 +193,31 @@ GameStateEditor::GameStateEditor(Game* game)
 	 
 	this->guiSystem.emplace("selectionCostText", Gui(sf::Vector2f(196, 16), 0, false, this->game->stylesheets.at("text"),
 	    { std::make_pair("", "") }));
-	 
+
+		this->guiSystem.emplace("inventory", Gui(sf::Vector2f(300,150), 2, true,
+	                                       this->game->stylesheets.at("button"),
+	    {
+	        std::make_pair("",          "player_inventory")
+	    }));
+
+	this->guiSystem.at("inventory").setPosition(sf::Vector2f((this->game->window.getSize().x - 300) , this->game->window.getSize().y - 150));
+
+	this->guiSystem.at("inventory").show();
+
+	this->guiSystem.emplace("inventory_slot_1", Gui(sf::Vector2f(30,30), 2, true,
+                                       this->game->stylesheets.at("button"),
+    {
+        std::make_pair("",          "player_inventory_slot_1")
+    }));
+
+	this->guiSystem.at("inventory_slot_1").setPosition(sf::Vector2f((this->game->window.getSize().x - 295) , this->game->window.getSize().y - 145));
+
+	this->guiSystem.at("inventory_slot_1").show();
+
 	this->guiSystem.emplace("infoBar", Gui(sf::Vector2f(this->game->window.getSize().x / 5, 16), 2, true,
 	                                       this->game->stylesheets.at("button"),
 	    {
-	        std::make_pair("time",          "time")
+	        std::make_pair("health",          "player_health")
 	    }));
 	this->guiSystem.at("infoBar").setPosition(sf::Vector2f(0, this->game->window.getSize().y - 16));
 	this->guiSystem.at("infoBar").show();

@@ -51,6 +51,8 @@ class Map
  
     /* Draw the map */  
     void draw(sf::RenderWindow& window, float dt);
+
+	void loadJSON();
  
     /* Blank map constructor */
     Map()

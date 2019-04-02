@@ -4,10 +4,9 @@
 #include <map>
 #include <vector>
 #include <fstream>
- 
+#include "rapidjson/document.h"
 #include "map.hpp"
 #include "Tile.hpp"
-
 
 /* Load map from disk */
 void Map::load(const std::string& filename, unsigned int width, unsigned int height,
@@ -68,6 +67,61 @@ void Map::load(const std::string& filename, unsigned int width, unsigned int hei
 			area[i][b] = 1;
 		}
 	}
+
+	loadJSON();
+}
+
+void Map::loadJSON()
+{
+	std::vector<std::vector<int>> vec_data;
+	std::ifstream in("media/testmap.json");
+	std::string contents((std::istreambuf_iterator<char>(in)), 
+    std::istreambuf_iterator<char>());
+	rapidjson::Document document;
+	std::string foundName;
+	document.Parse(contents.c_str());
+	int mapHeight = document["height"].GetInt();
+	int mapWidth = document["width"].GetInt();
+	int sizeNow = mapHeight * mapWidth;
+	vec_data.resize(sizeNow);
+	if(document.IsObject())
+	{
+		if(document.HasMember("layers"))
+		{
+			const rapidjson::Value& employeeArray = document["layers"];
+			assert(employeeArray.IsArray());
+			for (rapidjson::SizeType i = 0; i < employeeArray.Size(); i++)
+			{
+				const rapidjson::Value & atomicObject  = employeeArray[i];
+				if(atomicObject.HasMember("data")){
+					for (rapidjson::SizeType i = 0; i < atomicObject["data"].Size(); i++)
+					{
+						const rapidjson::Value & name  = atomicObject["data"][i];
+					//	printf("%i \n", name.GetInt());
+						vec_data[i].emplace_back(name.GetInt());
+					}
+            }
+			}
+		}
+	}
+
+	//printf("Map data: %i \n", vec_data[0][3]);
+
+	// std::vector<std::vector<int>> vec;
+ //
+	// //rapidjson::Value& data = results["data"];
+ //
+ //    vec.resize(data.Size());
+ //
+ //    for (rapidjson::SizeType i = 0; i<data.Size(); i++)
+ //    {
+ //        const rapidjson::Value &data_vec = data[i];
+	// 	assert(data_vec.IsArray());
+ //        for (rapidjson::SizeType j = 0; j < data_vec.Size(); j++)
+ //            vec[i].push_back(data_vec[j].GetInt());
+
+  //  }
+
 }
 
 void Map::save(const std::string& filename)
