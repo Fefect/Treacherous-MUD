@@ -13,7 +13,9 @@ void GameStateEditor::draw(const float dt)
     this->game->window.draw(this->game->background);
  
     this->game->window.setView(this->gameView);
-    map.draw(this->game->window, dt);
+
+	map.draw(this->game->window, dt);
+	map.drawObjects(this->game->window, dt);
 
 	this->game->window.setView(this->guiView);
     for(auto gui : this->guiSystem) this->game->window.draw(gui.second);

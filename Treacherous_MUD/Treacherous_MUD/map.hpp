@@ -22,7 +22,7 @@ class Map
     unsigned int width;
     unsigned int height;
  
-    std::vector<Tile> tiles;
+    std::vector<std::vector<Tile>> tiles;
  
     /* Resource map */
     std::vector<int> resources;
@@ -53,6 +53,8 @@ class Map
     void draw(sf::RenderWindow& window, float dt);
 
 	void loadJSON(std::map<std::string, Tile>& tileAtlas);
+
+	void drawObjects(sf::RenderWindow& window, float dt);
  
     /* Blank map constructor */
     Map()

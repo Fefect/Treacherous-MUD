@@ -74,7 +74,7 @@ void Map::load(const std::string& filename, unsigned int width, unsigned int hei
 void Map::loadJSON(std::map<std::string, Tile>& tileAtlas)
 {
 	std::vector<std::vector<int>> vec_data;
-	std::ifstream in("media/testmap.json");
+	std::ifstream in("media/testmap2.json");
 	std::string contents((std::istreambuf_iterator<char>(in)), 
     std::istreambuf_iterator<char>());
 	rapidjson::Document document;
@@ -86,7 +86,7 @@ void Map::loadJSON(std::map<std::string, Tile>& tileAtlas)
 		int mapWidth = document["width"].GetInt();
 		this->height = mapHeight;
 		this->width = mapWidth;
-		vec_data.resize(mapHeight * mapWidth);
+		vec_data.resize(mapHeight * mapWidth * 3);
 		if(document.HasMember("layers"))
 		{
 			const rapidjson::Value& layerArray = document["layers"];
@@ -103,17 +103,27 @@ void Map::loadJSON(std::map<std::string, Tile>& tileAtlas)
 				}
 			}
 		}
+		this->tiles.resize(mapHeight * mapWidth * 3);
 		for(int pos = 0; pos < this->width * this->height; ++pos)
 		{
-				switch(vec_data[pos][0])
+			for(int i = 0; i < 3; i++)
+			{
+				switch(vec_data[pos][i])
 				{
 				case 1:
-					this->tiles.push_back(tileAtlas.at("grass"));
+					this->tiles[i].emplace_back(tileAtlas.at("grass"));
+					break;
+				case 4:
+					this->tiles[i].emplace_back(tileAtlas.at("box_top"));
+					break;
+				case 7:
+					this->tiles[i].emplace_back(tileAtlas.at("box_bottom"));
 					break;
 				default:
-					this->tiles.push_back(tileAtlas.at("static_water"));
+					this->tiles[i].emplace_back(tileAtlas.at("void"));
 					break;
 				}
+			}
 		}
 		
 	for(auto i = 0; i < width; i++)
@@ -141,7 +151,7 @@ void Map::draw(sf::RenderWindow& window, float dt)
             sf::Vector2f pos;
             pos.x = (x - y) * this->tileSize + this->width * this->tileSize;
             pos.y = (x + y) * this->tileSize * 0.5;
-            this->tiles[y*this->width+x].sprite.setPosition(pos);
+            this->tiles[0][y*this->width+x].sprite.setPosition(pos);
 			
 			if(!this->bfs.pathBackup.empty()) {
 				for (auto& yy : this->bfs.pathBackup)
@@ -150,14 +160,42 @@ void Map::draw(sf::RenderWindow& window, float dt)
 					{
 						int x1 = yy.first;
 						int y1 = yy.second;
-						this->tiles[y1*this->width+x1].sprite.setColor(sf::Color(0x7d, 0x7d, 0x7d));
+						if(!(this->tiles[0][y*this->width+x].tileType == TileType::VOID)) {
+						this->tiles[0][y1*this->width+x1].sprite.setColor(sf::Color(0x7d, 0x7d, 0x7d));
+						}
 					}
 				}
 			this->bfs.pathBackup.clear();
 			}
             /* Draw the tile */
-            this->tiles[y*this->width+x].draw(window, dt);
+			if(!(this->tiles[0][y*this->width+x].tileType == TileType::VOID))
+			{
+				this->tiles[0][y*this->width+x].draw(window, dt);
+			}
 		}
+	}
+}
+
+void Map::drawObjects(sf::RenderWindow& window, float dt)
+{
+	for(int i = 1; i < 3; i++)
+	{
+	for(auto y = 0; y < this->height; ++y)
+    {
+        for(auto x = 0; x < this->width; ++x)
+        {
+			sf::Vector2f pos;
+            pos.x = (x - y) * this->tileSize + this->width * this->tileSize;
+            pos.y = (x + y) * this->tileSize * 0.5;
+            this->tiles[i][y*this->width+x].sprite.setPosition(pos);
+
+			if(!(this->tiles[i][y*this->width+x].tileType == TileType::VOID))
+			{
+				this->tiles[i][y*this->width+x].draw(window, dt);
+			}
+
+		}
+	 }
 	}
 }
 
@@ -167,7 +205,7 @@ void Map::clearPath()
     {
         for(auto x = 0; x < this->width; ++x)
 		{
-		this->tiles[y*this->width+x].sprite.setColor(sf::Color(0xff, 0xff, 0xff));
+		this->tiles[0][y*this->width+x].sprite.setColor(sf::Color(0xff, 0xff, 0xff));
 		}
 	}
 }

@@ -41,8 +41,12 @@ void Game::loadTextures()
     texmgr.loadTexture("industrial",    "media/industrial.png");
     texmgr.loadTexture("road",          "media/road.png");
 	texmgr.loadTexture("static_water",	"media/water_static.png");
+	texmgr.loadTexture("void", "");
 
     texmgr.loadTexture("background", "media/background.png");
+
+	texmgr.loadTexture("box_bottom",         "media/box_bottom.png");
+	texmgr.loadTexture("box_top",         "media/box_top.png");
 }
  
 void Game::popState()
@@ -98,6 +102,21 @@ void Game::loadTiles()
 		Tile(this->tileSize, 1, texmgr.getRef("static_water"),
 			{staticAnim},
 			TileType::STATIC_WATER);
+	 this->tileAtlas["void"] =
+        Tile(this->tileSize, 1, texmgr.getRef("void"),
+            { staticAnim },
+            TileType::VOID);
+
+	  this->tileAtlas["box_top"] =
+        Tile(this->tileSize, 1, texmgr.getRef("box_top"),
+            { staticAnim },
+            TileType::GRASS);
+
+	  this->tileAtlas["box_bottom"] =
+        Tile(this->tileSize, 1, texmgr.getRef("box_bottom"),
+            { staticAnim },
+            TileType::GRASS);
+
     this->tileAtlas["grass"] =
         Tile(this->tileSize, 1, texmgr.getRef("grass"),
             { staticAnim },
