@@ -40,6 +40,7 @@ void Game::loadTextures()
     texmgr.loadTexture("commercial",    "media/commercial.png");
     texmgr.loadTexture("industrial",    "media/industrial.png");
     texmgr.loadTexture("road",          "media/road.png");
+	texmgr.loadTexture("static_water",	"media/water_static.png");
 
     texmgr.loadTexture("background", "media/background.png");
 }
@@ -93,6 +94,10 @@ Game::~Game()
 void Game::loadTiles()
 {
     Animation staticAnim(0, 0, 1.0f);
+	this->tileAtlas["static_water"] =
+		Tile(this->tileSize, 1, texmgr.getRef("static_water"),
+			{staticAnim},
+			TileType::STATIC_WATER);
     this->tileAtlas["grass"] =
         Tile(this->tileSize, 1, texmgr.getRef("grass"),
             { staticAnim },

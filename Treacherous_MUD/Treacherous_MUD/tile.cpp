@@ -38,5 +38,6 @@
             case TileType::RESIDENTIAL:     return "Residential Zone";
             case TileType::COMMERCIAL:      return "Commercial Zone";
             case TileType::INDUSTRIAL:      return "Industrial Zone";
+			case TileType::STATIC_WATER:	return "Static water";
         }
     }

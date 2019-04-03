@@ -52,7 +52,7 @@ class Map
     /* Draw the map */  
     void draw(sf::RenderWindow& window, float dt);
 
-	void loadJSON();
+	void loadJSON(std::map<std::string, Tile>& tileAtlas);
  
     /* Blank map constructor */
     Map()
