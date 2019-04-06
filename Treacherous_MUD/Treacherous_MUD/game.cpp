@@ -8,7 +8,7 @@
 #include "game_state.hpp"
 #include "texture_manager.hpp"
 #include "animation_handler.hpp"
-#include "tile.hpp"
+#include "tile_data.hpp"
 
 Game::Game()
 {
@@ -35,14 +35,6 @@ void Game::loadTextures()
 {
 	
 	texmgr.placeStaticTexture();
-	texmgr.loadTexture("grass",         "media/grass.png");
-    texmgr.loadTexture("forest",        "media/forest.png");
-    texmgr.loadTexture("water",         "media/water.png");
-    texmgr.loadTexture("residential",   "media/residential.png");
-    texmgr.loadTexture("commercial",    "media/commercial.png");
-    texmgr.loadTexture("industrial",    "media/industrial.png");
-    texmgr.loadTexture("road",          "media/road.png");
-	texmgr.loadTexture("static_water",	"media/water_static.png");
 	texmgr.loadTexture("void", "");
 
     texmgr.loadTexture("background", "media/background.png");

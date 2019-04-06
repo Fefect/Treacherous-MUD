@@ -4,7 +4,7 @@
 #include <stack>
 #include <SFML/Graphics.hpp>
 #include "texture_manager.hpp"
-#include "Tile.hpp"
+#include "tile_data.hpp"
 #include "gui.hpp"
 
 class GameState;

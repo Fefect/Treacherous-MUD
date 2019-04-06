@@ -6,7 +6,7 @@
 #include <fstream>
 #include "rapidjson/document.h"
 #include "map.hpp"
-#include "Tile.hpp"
+#include "tile_data.hpp"
 
 /* Load map from disk using JSON/Tiled */
 void Map::loadJSON(std::map<std::string, Tile>& tileAtlas)
@@ -68,11 +68,6 @@ void Map::loadJSON(std::map<std::string, Tile>& tileAtlas)
 		}
 	}
 	}
-}
-
-void Map::save(const std::string& filename)
-{
-    
 }
 
 void Map::draw(sf::RenderWindow& window, float dt)

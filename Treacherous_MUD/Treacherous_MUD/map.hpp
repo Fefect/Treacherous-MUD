@@ -8,7 +8,7 @@
 #include <map>
 #include <vector>
  
-#include "Tile.hpp"
+#include "tile_data.hpp"
 #include "BFS.hpp"
 
 class Map

@@ -2,7 +2,7 @@
     #include <SFML/Graphics.hpp>
      
     #include "animation_handler.hpp"
-    #include "Tile.hpp"
+    #include "tile_data.hpp"
      
     void Tile::draw(sf::RenderWindow& window, float dt)
     {

@@ -135,7 +135,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="map.cpp" />
     <ClCompile Include="texture_manager.cpp" />
-    <ClCompile Include="tile.cpp" />
+    <ClCompile Include="tile_data.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\res\burnt_chicken.png" />
@@ -151,7 +151,7 @@
     <ClInclude Include="gui.hpp" />
     <ClInclude Include="map.hpp" />
     <ClInclude Include="texture_manager.hpp" />
-    <ClInclude Include="Tile.hpp" />
+    <ClInclude Include="tile_data.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
