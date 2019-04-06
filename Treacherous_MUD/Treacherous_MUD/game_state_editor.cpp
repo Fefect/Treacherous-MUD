@@ -184,7 +184,7 @@ GameStateEditor::GameStateEditor(Game* game)
     this->selectionStart = sf::Vector2i(0, 0);
     this->selectionEnd = sf::Vector2i(0, 0);
  
-    this->currentTile = &this->game->tileAtlas.at("grass");
+    this->currentTile = &this->game->tileAtlas.at("0");
     this->actionState = ActionState::NONE;
 
 		/* Create gui elements. */

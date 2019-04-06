@@ -33,6 +33,23 @@ class Tile
  
     /* Constructor */
     Tile() { }
+	Tile(const unsigned int tileSize, const unsigned int height, sf::Sprite& sprite,
+        const std::vector<Animation>& animations,
+        const TileType tileType)
+    {
+	    this->tileType = tileType;
+        this->tileVariant = 0;
+        this->regions[0] = 0;
+
+		this->sprite.setOrigin(sf::Vector2f(0.0f, tileSize*(height-1)));
+		this->sprite = sprite;
+		this->animHandler.frameSize = sf::IntRect(0, 0, tileSize*2, tileSize*height);
+        for(auto animation : animations)
+        {
+            this->animHandler.addAnim(animation);
+        }
+        this->animHandler.update(0.0f);
+    }
     Tile(const unsigned int tileSize, const unsigned int height, sf::Texture& texture,
         const std::vector<Animation>& animations,
         const TileType tileType)

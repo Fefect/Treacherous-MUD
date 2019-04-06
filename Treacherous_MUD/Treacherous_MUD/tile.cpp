@@ -13,7 +13,7 @@
         this->animHandler.update(dt);
      
         /* Update the sprite */
-        this->sprite.setTextureRect(this->animHandler.bounds);
+       // this->sprite.setTextureRect(this->animHandler.bounds);
      
         /* Draw the tile */
         window.draw(this->sprite);

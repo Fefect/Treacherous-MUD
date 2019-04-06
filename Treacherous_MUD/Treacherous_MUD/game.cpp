@@ -33,6 +33,8 @@ void Game::pushState(GameState* state)
 
 void Game::loadTextures()
 {
+	
+	texmgr.placeStaticTexture();
 	texmgr.loadTexture("grass",         "media/grass.png");
     texmgr.loadTexture("forest",        "media/forest.png");
     texmgr.loadTexture("water",         "media/water.png");
@@ -95,64 +97,81 @@ Game::~Game()
     while(!this->states.empty()) popState();
 }
 
+void Game::loadSpriteSheet()
+{
+	
+}
+
 void Game::loadTiles()
 {
+	
     Animation staticAnim(0, 0, 1.0f);
-	this->tileAtlas["static_water"] =
-		Tile(this->tileSize, 1, texmgr.getRef("static_water"),
-			{staticAnim},
-			TileType::STATIC_WATER);
-	 this->tileAtlas["void"] =
-        Tile(this->tileSize, 1, texmgr.getRef("void"),
-            { staticAnim },
-            TileType::VOID);
 
-	  this->tileAtlas["box_top"] =
-        Tile(this->tileSize, 1, texmgr.getRef("box_top"),
-            { staticAnim },
-            TileType::GRASS);
+	int maxHeight = 10;
+	int maxWidth = 3;
 
-	  this->tileAtlas["box_bottom"] =
-        Tile(this->tileSize, 1, texmgr.getRef("box_bottom"),
-            { staticAnim },
-            TileType::GRASS);
+	int maxAmount = maxHeight * maxWidth;
 
-    this->tileAtlas["grass"] =
-        Tile(this->tileSize, 1, texmgr.getRef("grass"),
-            { staticAnim },
-            TileType::GRASS);
-    tileAtlas["forest"] =
-        Tile(this->tileSize, 1, texmgr.getRef("forest"),
-            { staticAnim },
-            TileType::FOREST);  
-    tileAtlas["water"] =
-        Tile(this->tileSize, 1, texmgr.getRef("water"),
-            { Animation(0, 3, 0.5f),
-            Animation(0, 3, 0.5f),
-            Animation(0, 3, 0.5f) },
-            TileType::WATER);
-    tileAtlas["residential"] =
-        Tile(this->tileSize, 2, texmgr.getRef("residential"),
-            { staticAnim, staticAnim, staticAnim,
-            staticAnim, staticAnim, staticAnim },
-            TileType::RESIDENTIAL);
-    tileAtlas["commercial"] =
-        Tile(this->tileSize, 2, texmgr.getRef("commercial"),
-            { staticAnim, staticAnim, staticAnim, staticAnim},
-            TileType::COMMERCIAL);
-    tileAtlas["industrial"] =
-        Tile(this->tileSize, 2, texmgr.getRef("industrial"),
-            { staticAnim, staticAnim, staticAnim,
-            staticAnim },
-            TileType::INDUSTRIAL);
-    tileAtlas["road"] =
-        Tile(this->tileSize, 1, texmgr.getRef("road"),
-            { staticAnim, staticAnim, staticAnim,
-            staticAnim, staticAnim, staticAnim,
-            staticAnim, staticAnim, staticAnim,
-            staticAnim, staticAnim },
-            TileType::ROAD);
- 
+	for(int i = 0; i < maxAmount; i++)
+	{
+		this->tileAtlas[std::to_string(i)] = Tile(this->tileSize,1,texmgr.getStaticRef(i), {staticAnim}, TileType::STATIC_WATER);
+	}
+
+	// this->tileAtlas["static_water"] =
+	// 	Tile(this->tileSize, 1, texmgr.getRef("static_water"),
+	// 		{staticAnim},
+	// 		TileType::STATIC_WATER);
+	this->tileAtlas["void"] =
+       Tile(this->tileSize, 1, texmgr.getRef("void"),
+           { staticAnim },
+           TileType::VOID);
+ //
+	//   this->tileAtlas["box_top"] =
+ //        Tile(this->tileSize, 1, texmgr.getRef("box_top"),
+ //            { staticAnim },
+ //            TileType::GRASS);
+ //
+	//   this->tileAtlas["box_bottom"] =
+ //        Tile(this->tileSize, 1, texmgr.getRef("box_bottom"),
+ //            { staticAnim },
+ //            TileType::GRASS);
+ //
+ //    this->tileAtlas["grass"] =
+ //        Tile(this->tileSize, 1, texmgr.getRef("grass"),
+ //            { staticAnim },
+ //            TileType::GRASS);
+ //    tileAtlas["forest"] =
+ //        Tile(this->tileSize, 1, texmgr.getRef("forest"),
+ //            { staticAnim },
+ //            TileType::FOREST);  
+ //    tileAtlas["water"] =
+ //        Tile(this->tileSize, 1, texmgr.getRef("water"),
+ //            { Animation(0, 3, 0.5f),
+ //            Animation(0, 3, 0.5f),
+ //            Animation(0, 3, 0.5f) },
+ //            TileType::WATER);
+ //    tileAtlas["residential"] =
+ //        Tile(this->tileSize, 2, texmgr.getRef("residential"),
+ //            { staticAnim, staticAnim, staticAnim,
+ //            staticAnim, staticAnim, staticAnim },
+ //            TileType::RESIDENTIAL);
+ //    tileAtlas["commercial"] =
+ //        Tile(this->tileSize, 2, texmgr.getRef("commercial"),
+ //            { staticAnim, staticAnim, staticAnim, staticAnim},
+ //            TileType::COMMERCIAL);
+ //    tileAtlas["industrial"] =
+ //        Tile(this->tileSize, 2, texmgr.getRef("industrial"),
+ //            { staticAnim, staticAnim, staticAnim,
+ //            staticAnim },
+ //            TileType::INDUSTRIAL);
+ //    tileAtlas["road"] =
+ //        Tile(this->tileSize, 1, texmgr.getRef("road"),
+ //            { staticAnim, staticAnim, staticAnim,
+ //            staticAnim, staticAnim, staticAnim,
+ //            staticAnim, staticAnim, staticAnim,
+ //            staticAnim, staticAnim },
+ //            TileType::ROAD);
+	
     return;
 }
 

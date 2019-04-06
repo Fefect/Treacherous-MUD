@@ -87,6 +87,7 @@ void Map::loadJSON(std::map<std::string, Tile>& tileAtlas)
 		this->height = mapHeight;
 		this->width = mapWidth;
 		vec_data.resize(mapHeight * mapWidth * 3);
+		int amountOfLayers = 0;
 		if(document.HasMember("layers"))
 		{
 			const rapidjson::Value& layerArray = document["layers"];
@@ -95,6 +96,7 @@ void Map::loadJSON(std::map<std::string, Tile>& tileAtlas)
 			{
 				const rapidjson::Value & dataObject  = layerArray[i];
 				if(dataObject.HasMember("data")){
+					amountOfLayers += 1;
 					for (rapidjson::SizeType i = 0; i < dataObject["data"].Size(); i++)
 					{
 						const rapidjson::Value & name  = dataObject["data"][i];
@@ -103,26 +105,21 @@ void Map::loadJSON(std::map<std::string, Tile>& tileAtlas)
 				}
 			}
 		}
-		this->tiles.resize(mapHeight * mapWidth * 3);
+		this->tiles.resize(mapHeight * mapWidth * amountOfLayers);
 		for(int pos = 0; pos < this->width * this->height; ++pos)
 		{
-			for(int i = 0; i < 3; i++)
+			for(int i = 0; i < amountOfLayers; i++)
 			{
-				switch(vec_data[pos][i])
+				int tileID = vec_data[pos][i];
+				if(tileID == 0)
 				{
-				case 1:
-					this->tiles[i].emplace_back(tileAtlas.at("grass"));
-					break;
-				case 4:
-					this->tiles[i].emplace_back(tileAtlas.at("box_top"));
-					break;
-				case 7:
-					this->tiles[i].emplace_back(tileAtlas.at("box_bottom"));
-					break;
-				default:
 					this->tiles[i].emplace_back(tileAtlas.at("void"));
-					break;
 				}
+				else
+				{
+					this->tiles[i].emplace_back(tileAtlas.at(std::to_string(tileID)));
+				}
+				//this->tiles[i].emplace_back(tileAtlas.at(std::to_string(tileID)));
 			}
 		}
 		
@@ -156,7 +153,7 @@ void Map::draw(sf::RenderWindow& window, float dt)
 			if(!this->bfs.pathBackup.empty()) {
 				for (auto& yy : this->bfs.pathBackup)
 				{
-					if(yy.first < 64 && yy.second < 64)
+					if(yy.first < this->height && yy.second < this->width)
 					{
 						int x1 = yy.first;
 						int y1 = yy.second;
@@ -168,7 +165,7 @@ void Map::draw(sf::RenderWindow& window, float dt)
 			this->bfs.pathBackup.clear();
 			}
             /* Draw the tile */
-			if(!(this->tiles[0][y*this->width+x].tileType == TileType::VOID))
+			//if(!(this->tiles[0][y*this->width+x].tileType == TileType::VOID))
 			{
 				this->tiles[0][y*this->width+x].draw(window, dt);
 			}
@@ -191,7 +188,7 @@ void Map::drawObjects(sf::RenderWindow& window, float dt)
 
 			if(!(this->tiles[i][y*this->width+x].tileType == TileType::VOID))
 			{
-				this->tiles[i][y*this->width+x].draw(window, dt);
+				//this->tiles[i][y*this->width+x].draw(window, dt);
 			}
 
 		}

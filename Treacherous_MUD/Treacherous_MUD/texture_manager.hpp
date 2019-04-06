@@ -12,9 +12,17 @@ class TextureManager
  
     /* Array of textures used */
     std::map<std::string, sf::Texture> textures;
+	std::vector<sf::Sprite> static_textures;
+	std::map<std::string, sf::Texture> texture1;
  
     public:
- 
+
+	sf::Sprite& getStaticRef(int id);
+
+	int spriteSheetHeight;
+	int spriteSheetWidth;
+
+	void placeStaticTexture();
     /* Add a texture from a file */
     void loadTexture(const std::string& name, const std::string &filename);
  
