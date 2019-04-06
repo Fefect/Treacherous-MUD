@@ -7,20 +7,27 @@
     void Tile::draw(sf::RenderWindow& window, float dt)
     {
         /* Change the sprite to reflect the tile variant */
-        this->animHandler.changeAnim(this->tileVariant);
+       // this->animHandler.changeAnim(this->tileVariant);
      
         /* Update the animation */
-        this->animHandler.update(dt);
+       // this->animHandler.update(dt);
      
         /* Update the sprite */
-        this->sprite.setTextureRect(this->animHandler.bounds);
+       // this->sprite.setTextureRect(this->animHandler.bounds);
      
         /* Draw the tile */
         window.draw(this->sprite);
      
         return;
     }
-     
+
+
+    void Tile::drawStatic(sf::RenderWindow& window, float dt)
+    {     
+        /* Draw the tile */
+        window.draw(this->sprite);
+    }
+
     void Tile::update()
     {
         

@@ -23,7 +23,9 @@ class Game
     sf::RenderWindow window;
     TextureManager texmgr;
     sf::Sprite background;
- 
+
+
+	void loadSpriteSheet();
     void pushState(GameState* state);
     void popState();
     void changeState(GameState* state);
