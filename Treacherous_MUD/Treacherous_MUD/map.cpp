@@ -119,7 +119,6 @@ void Map::loadJSON(std::map<std::string, Tile>& tileAtlas)
 				{
 					this->tiles[i].emplace_back(tileAtlas.at(std::to_string(tileID)));
 				}
-				//this->tiles[i].emplace_back(tileAtlas.at(std::to_string(tileID)));
 			}
 		}
 		
@@ -165,7 +164,7 @@ void Map::draw(sf::RenderWindow& window, float dt)
 			this->bfs.pathBackup.clear();
 			}
             /* Draw the tile */
-			//if(!(this->tiles[0][y*this->width+x].tileType == TileType::VOID))
+			if(!(this->tiles[0][y*this->width+x].tileType == TileType::VOID))
 			{
 				this->tiles[0][y*this->width+x].draw(window, dt);
 			}
@@ -188,7 +187,7 @@ void Map::drawObjects(sf::RenderWindow& window, float dt)
 
 			if(!(this->tiles[i][y*this->width+x].tileType == TileType::VOID))
 			{
-				//this->tiles[i][y*this->width+x].draw(window, dt);
+				this->tiles[i][y*this->width+x].draw(window, dt);
 			}
 
 		}

@@ -20,21 +20,23 @@ void TextureManager::placeStaticTexture()
 	this->texture1["tilemap"].loadFromFile("media/spritesheetMUD.png");
 	this->spriteSheetHeight = this->texture1["tilemap"].getSize().y / 64;
 	this->spriteSheetWidth = this->texture1["tilemap"].getSize().x / 128;
+	int z = 0;
 	for(int i = 0; i < this->spriteSheetHeight; i++)
 	{
 		for(int b = 0; b < this->spriteSheetWidth; b++)
 		{
+			z += 1;
 			sf::Sprite sprite;
 			sprite.setTexture(this->texture1["tilemap"]);
 			sprite.setTextureRect(sf::IntRect(b*128,i*64,128,64));
-			this->static_textures.emplace_back(sprite);
+			this->static_textures.emplace(std::to_string(z), sprite);
 		}
 	}
 }
 
-sf::Sprite& TextureManager::getStaticRef(const int id)
+sf::Sprite& TextureManager::getStaticRef(const std::string& texture)
 {
-	return this->static_textures.at(id);
+	return this->static_textures.at(texture);
 }
  
 sf::Texture& TextureManager::getRef(const std::string& texture)

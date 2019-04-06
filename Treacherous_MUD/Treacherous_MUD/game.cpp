@@ -114,7 +114,8 @@ void Game::loadTiles()
 
 	for(int i = 0; i < maxAmount; i++)
 	{
-		this->tileAtlas[std::to_string(i)] = Tile(this->tileSize,1,texmgr.getStaticRef(i), {staticAnim}, TileType::STATIC_WATER);
+		int z = i + 1;
+		this->tileAtlas[std::to_string(z)] = Tile(this->tileSize,1,texmgr.getStaticRef(std::to_string(z)), {staticAnim}, TileType::STATIC_WATER);
 	}
 
 	// this->tileAtlas["static_water"] =
