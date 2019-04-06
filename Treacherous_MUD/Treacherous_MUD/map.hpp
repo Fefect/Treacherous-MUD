@@ -21,6 +21,7 @@ class Map
 
     unsigned int width;
     unsigned int height;
+	unsigned int layers;
  
     std::vector<std::vector<Tile>> tiles;
  
@@ -41,12 +42,8 @@ class Map
 
 	//clears the path
 	void clearPath();
-
-    /* Load map from disk */
-    void load(const std::string& filename, unsigned int width, unsigned int height,
-        std::map<std::string, Tile>& tileAtlas);
  
-    /* Save map to disk */
+    /* Save map to disk ~ obsolete for now*/
     void save(const std::string& filename);
  
     /* Draw the map */  
@@ -71,7 +68,8 @@ class Map
 	{
 	    this->numSelected = 0;
 	    this->tileSize = 64;
-	    load(filename, width, height, tileAtlas);
+		this->layers = 0;
+	    loadJSON(tileAtlas);
 	}
 };
  

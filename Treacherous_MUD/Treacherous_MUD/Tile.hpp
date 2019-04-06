@@ -72,6 +72,8 @@ class Tile
     }
  
     void draw(sf::RenderWindow& window, float dt);
+
+	void drawStatic(sf::RenderWindow& window, float dt);
  
     void update();
  

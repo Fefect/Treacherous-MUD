@@ -20,7 +20,14 @@
      
         return;
     }
-     
+
+
+    void Tile::drawStatic(sf::RenderWindow& window, float dt)
+    {     
+        /* Draw the tile */
+        window.draw(this->sprite);
+    }
+
     void Tile::update()
     {
         

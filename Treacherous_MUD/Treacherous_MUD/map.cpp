@@ -8,69 +8,7 @@
 #include "map.hpp"
 #include "Tile.hpp"
 
-/* Load map from disk */
-void Map::load(const std::string& filename, unsigned int width, unsigned int height,
-    std::map<std::string, Tile>& tileAtlas)
-	{
-    std::ifstream inputFile;
-    inputFile.open(filename, std::ios::in | std::ios::binary);
- 
- //    this->width = width;
- //    this->height = height;
- //
-	// for(int x = 0; x < this->width; x++)
-	// {
-	// 	for(int y = 0; y < this->width; y++)
-	// 	{
-	// 	TileType tileType;
- //        inputFile.read((char*)&tileType, sizeof(int));
- //        switch(tileType)
- //        {
- //            default:
- //            case TileType::VOID:
- //            case TileType::GRASS:
- //                this->tiles.push_back(tileAtlas.at("grass"));
- //                break;
- //            case TileType::FOREST:
- //                this->tiles.push_back(tileAtlas.at("forest"));
- //                break;
- //            case TileType::WATER:
- //                this->tiles.push_back(tileAtlas.at("water"));
- //                break;
- //            case TileType::RESIDENTIAL:
- //                this->tiles.push_back(tileAtlas.at("residential"));
- //                break;
- //            case TileType::COMMERCIAL:
- //                this->tiles.push_back(tileAtlas.at("commercial"));
- //                break;
- //            case TileType::INDUSTRIAL:
- //                this->tiles.push_back(tileAtlas.at("industrial"));
- //                break;
- //            case TileType::ROAD:
- //                this->tiles.push_back(tileAtlas.at("road"));
- //                break;
- //        }
- //        Tile& tile = this->tiles.back();
-	// 	tile.corX = x;
-	// 	tile.corY = y;
- //        inputFile.read((char*)&tile.tileVariant, sizeof(int));
- //        inputFile.read((char*)&tile.regions, sizeof(int)*1);
- //    }
-	// }
- //
- //    inputFile.close();
- //
-	// for(auto i = 0; i < width; i++)
-	// {
-	// 	for(auto b = 0; b < height; b++)
-	// 	{
-	// 		area[i][b] = 1;
-	// 	}
-	// }
-
-	loadJSON(tileAtlas);
-}
-
+/* Load map from disk using JSON/Tiled */
 void Map::loadJSON(std::map<std::string, Tile>& tileAtlas)
 {
 	std::vector<std::vector<int>> vec_data;
@@ -86,17 +24,17 @@ void Map::loadJSON(std::map<std::string, Tile>& tileAtlas)
 		int mapWidth = document["width"].GetInt();
 		this->height = mapHeight;
 		this->width = mapWidth;
-		vec_data.resize(mapHeight * mapWidth * 3);
-		int amountOfLayers = 0;
 		if(document.HasMember("layers"))
 		{
 			const rapidjson::Value& layerArray = document["layers"];
 			assert(layerArray.IsArray());
+			this->layers = layerArray.Size();
+			vec_data.resize(mapHeight * mapWidth * this->layers);
+
 			for (rapidjson::SizeType i = 0; i < layerArray.Size(); i++)
 			{
 				const rapidjson::Value & dataObject  = layerArray[i];
 				if(dataObject.HasMember("data")){
-					amountOfLayers += 1;
 					for (rapidjson::SizeType i = 0; i < dataObject["data"].Size(); i++)
 					{
 						const rapidjson::Value & name  = dataObject["data"][i];
@@ -105,10 +43,10 @@ void Map::loadJSON(std::map<std::string, Tile>& tileAtlas)
 				}
 			}
 		}
-		this->tiles.resize(mapHeight * mapWidth * amountOfLayers);
+		this->tiles.resize(mapHeight * mapWidth * this->layers);
 		for(int pos = 0; pos < this->width * this->height; ++pos)
 		{
-			for(int i = 0; i < amountOfLayers; i++)
+			for(int i = 0; i < this->layers; i++)
 			{
 				int tileID = vec_data[pos][i];
 				if(tileID == 0)
@@ -174,7 +112,7 @@ void Map::draw(sf::RenderWindow& window, float dt)
 
 void Map::drawObjects(sf::RenderWindow& window, float dt)
 {
-	for(int i = 1; i < 3; i++)
+	for(int i = 1; i < this->layers; i++)
 	{
 	for(auto y = 0; y < this->height; ++y)
     {
@@ -187,7 +125,7 @@ void Map::drawObjects(sf::RenderWindow& window, float dt)
 
 			if(!(this->tiles[i][y*this->width+x].tileType == TileType::VOID))
 			{
-				this->tiles[i][y*this->width+x].draw(window, dt);
+				this->tiles[i][y*this->width+x].drawStatic(window, dt);
 			}
 
 		}
